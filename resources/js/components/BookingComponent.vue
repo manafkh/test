@@ -1,11 +1,9 @@
 <template>
-<div>
+<div class="container border">
 
-    <form
+    <form class="align-content-center"
             id="app"
-            @submit="checkForm"
-            action="https://vuejs.org/"
-            method="post"
+            @submit="checkForm(appointment)"
     >
 
 
@@ -14,7 +12,7 @@
             <label for="date">date</label>
             <input
                     id="date"
-                    v-model="start_time"
+                    v-model="appointment.start_time"
                     type="date"
                     name="date"
             >
@@ -24,7 +22,7 @@
             <label for="Duration">Duration</label>
             <select
                     id="Duration"
-                    v-model="Duration"
+                    v-model="appointment.Duration"
                     name="Duration"
             >
                 <option   v-for="duration in durations" v-bind:value="duration.key">
@@ -37,19 +35,18 @@
 
         <p>
             <label for="Time slot">Time Slot</label>
-            <select v-on:click="checkTime('09:50:00','10:50:00',Duration)"
+            <select v-on:click="checkTime(expert.start_time,expert.end_time,appointment.Duration)"
                     id="Time slot"
-                    v-model="time_slot"
+                    v-model="appointment.time_slot"
                     name="movie"
             >
                 <option v-for="time_slot in Time_slots" v-bind:value="time_slot">{{time_slot}}</option>
             </select>
 
         </p>
-        <p>
-            your appointment : {{this.start_time}} {{this.time_slot}}
+        <p class="align-content-center" style="color: #113049; font-size: 16px" v-if="appointment.time_slot != null">
+            your appointment : {{this.appointment.start_time}} {{this.appointment.time_slot}}
         </p>
-
         <p>
             <input class="btn btn-success"
                     type="submit"
@@ -67,39 +64,50 @@
 
 
     export default  {
-
+        props:['expert_id'],
         data() {
             return {
                 errors: [],
-                Duration:null,
-                start_time: null,
+                expert:[],
+                // Duration:null,
+                // start_time: null,
                 durations: [
                     {key:'15'},{key:'30'},{key:'60'}
                     ],
                 Time_slots: [],
-                time_slot:null
+                // time_slot:null,
+                appointment:{
+                    start_time:null,
+                    Duration:null,
+                    time_slot:null,
 
+                },
             }
         },
+        computed:{
+            now: function () {
+                return Date.now()
+            }
+        },
+        mounted:function () {
+            this.details();
+        },
         methods:{
-            checkForm: function (e) {
-                if (this.name && this.age) {
-                    return true;
-                }
-
-                this.errors = [];
-
-                if (!this.name) {
-                    this.errors.push('Name required.');
-                }
-                if (!this.age) {
-                    this.errors.push('Age required.');
-                }
-
-                e.preventDefault();
+            details(){
+                    let uri = '/auth/experts/'+this.expert_id;
+                    axios.get(uri).then((response) => {
+                        this.expert = response.data;
+                        console.log(this.expert);
+                    });
+            },
+            checkForm() {
+                let uri = '/auth/experts/'+this.expert_id;
+               axios.post(uri,appointment).then(res =>{
+                  console.log(res.data);
+               })
             },
             checkTime(start_time , end_time ,duration){
-                var timesolt =[start_time];
+                let timesolt =[];
 
                 function addMinutes(time, minutes) {
                     let date = new Date(new Date('01/01/2015 ' + time).getTime() + minutes * 60000);
@@ -110,17 +118,26 @@
                     console.log(tempTime);
                     return tempTime;
                 }
-                let end;
-                while (start_time != end_time && end != end_time ) {
 
-                    start_time = addMinutes(start_time, duration);
-                    end = addMinutes(start_time,duration);
-                    timesolt.push(start_time +' - '+ end);
+                while (start_time !== end_time  ) {
+
+                    if (start_time === "02:45:00"){
+                        start_time = "03:00:00";
+                        timesolt.push(start_time);
+                        start_time = addMinutes(start_time, duration);
+                        timesolt.push(start_time)
+                    }else {
+                        start_time = addMinutes(start_time, duration);
+                        timesolt.push(start_time);
+
+                    }
+
 
                 }
-                this.Time_slots =timesolt;
-                console.log(timesolt);
-            }
+                this.Time_slots =timesolt.slice(0,-1);
+
+            },
+
         }
     }
 </script>

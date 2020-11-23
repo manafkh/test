@@ -27,17 +27,17 @@ class expertSeeder extends Seeder
 
         $d = $countries->where('name.common', 'New Zealand')->first()->cca2;
         $timezones = DateTimeZone::listIdentifiers(DateTimeZone::PER_COUNTRY, $d);
-
         $timezone = new DateTimeZone(end($timezones));
         $datetime = new DateTime('now', $timezone);
-
+        $new_start = new DateTime('08:00:00', new DateTimeZone(end($timezones)));
+        $new_end = new DateTime('18:00:00', new DateTimeZone(end($timezones)));
         \App\Expert::create([
             'name'=>' Ahmad Ali',
             'expert'=>'Doctor',
             'country'=>'New Zealand',
             'TimeZone'=> end($timezones). ' GMT ' . $datetime->format('P'),
-            'start_time'=>'08:00:00',
-            'end_time'=>'18:00:00',
+            'start_time'=>$new_start->setTimezone(new DateTimeZone('GMT'))->format('H:i:s'),
+            'end_time'=>$new_end->setTimezone(new DateTimeZone('GMT'))->format('H:i:s'),
         ]);
 
         $d = $countries->where('name.common', 'Syria')->first()->cca2;
@@ -45,13 +45,15 @@ class expertSeeder extends Seeder
 
         $timezone = new DateTimeZone(end($timezones));
         $datetime = new DateTime('now', $timezone);
+        $new_start = new DateTime('05:00:00', new DateTimeZone(end($timezones)));
+        $new_end = new DateTime('12:00:00', new DateTimeZone(end($timezones)));
         \App\Expert::create([
             'name'=>'Nezar Ahmad',
             'expert'=>'Civil engineer',
             'country'=>'Syria',
             'TimeZone'=>end($timezones). ' GMT ' . $datetime->format('P'),
-            'start_time'=>'05:00:00',
-            'end_time'=>'12:00:00',
+            'start_time'=>$new_start->setTimezone(new DateTimeZone('GMT'))->format('H:i:s'),
+            'end_time'=>$new_end->setTimezone(new DateTimeZone('GMT'))->format('H:i:s'),
         ]);
 
 
@@ -59,13 +61,15 @@ class expertSeeder extends Seeder
         $timezones = DateTimeZone::listIdentifiers(DateTimeZone::PER_COUNTRY, $d);
         $timezone = new DateTimeZone(end($timezones));
         $datetime = new DateTime('now', $timezone);
+        $new_start = new DateTime('15:00:00', new DateTimeZone(end($timezones)));
+        $new_end = new DateTime('16:00:00', new DateTimeZone(end($timezones)));
         \App\Expert::create([
             'name'=>'hoda ahmad',
             'expert'=>'Computer Engineer',
             'country'=>'Egypt',
             'TimeZone'=>end($timezones). ' GMT ' . $datetime->format('P'),
-            'start_time'=>'15:00:00',
-            'end_time'=>'16:00:00',
+            'start_time'=>$new_start->setTimezone(new DateTimeZone('GMT'))->format('H:i:s'),
+            'end_time'=>$new_end->setTimezone(new DateTimeZone('GMT'))->format('H:i:s'),
         ]);
     }
 }

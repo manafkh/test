@@ -10,7 +10,7 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
-        "axios": "^0.19",
+        "axios": "^0.19.2",
         "bootstrap": "^4.0.0",
         "cross-env": "^7.0",
         "jquery": "^3.2",
@@ -21,7 +21,10 @@
         "sass": "^1.20.1",
         "sass-loader": "^8.0.0",
         "vue": "^2.5.17",
-        "vue-template-compiler": "^2.6.10"
+        "vue-axios": "^3.2.0",
+        "vue-loader": "^15.9.5",
+        "vue-router": "^3.4.9",
+        "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.1",
@@ -30,8 +33,11 @@
         "@fortawesome/vue-fontawesome": "^2.0.0",
         "@syncfusion/ej2-base": "^18.3.47",
         "@syncfusion/ej2-vue-schedule": "^18.3.47",
-        "vue-router": "^3.4.9",
+        "@websanova/vue-auth": "^3.3.8",
+        "laravel-echo": "^1.9.0",
+        "pusher-js": "^7.0.1",
         "vue-slide-toggle": "^1.1.1",
-        "vue-time-slot": "0.0.1"
+        "vue-time-slot": "0.0.1",
+        "vuex": "^3.5.1"
     }
 }

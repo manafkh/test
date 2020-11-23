@@ -1,6 +1,12 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Seeder;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use PragmaRX\Countries\Package\Services\Config;
+use PragmaRX\Countries\Package\Services\Countries;
 
 class TimezoneSeeder extends Seeder
 {
@@ -25,6 +31,47 @@ class TimezoneSeeder extends Seeder
             }
 
         }
+        $countries = new Countries(new Config([
+            'hydrate' => [
+                'elements' => [
+                    'currencies' => true,
+                    'flag' => true,
+                    'timezones' => true,
+                ],
+            ],
+        ]));
+        $d = $countries->where('name.common', 'New Zealand')->first()->cca2;
+        $timezones = DateTimeZone::listIdentifiers(DateTimeZone::PER_COUNTRY, $d);
+        $timezone = new DateTimeZone(end($timezones));
+        $datetime = new DateTime('now', $timezone);
+
+        User::create([
+            'name' => 'Admin',
+            'email' => 'admin@test.com',
+            'password' => Hash::make('admin'),
+            'Timezone'=>end($timezones). ' GMT ' . $datetime->format('P'),
+            'role' => 2
+        ]);
+
+        $d = $countries->where('name.common', 'Syria')->first()->cca2;
+        $timezones = DateTimeZone::listIdentifiers(DateTimeZone::PER_COUNTRY, $d);
+        $timezone = new DateTimeZone(end($timezones));
+        $datetime = new DateTime('now', $timezone);
+
+        User::create([
+            'name' => 'User',
+            'email' => 'user@test.com',
+            'password' => Hash::make('secret'),
+            'Timezone'=>end($timezones). ' GMT ' . $datetime->format('P'),
+            'role' => 1
+        ]);
+
+        DB::table('users')->insert([
+            'name' => 'John Doe',
+            'email' => 'john@doe.com',
+            'password' => Hash::make('password')
+        ]);
 
     }
+
 }
